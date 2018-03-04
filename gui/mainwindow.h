@@ -10,5 +10,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow();
     ~MainWindow();
+protected:
+    void createActions();
 };
 #endif //DEMO_NN_GUI_MAINWINDOW_H
