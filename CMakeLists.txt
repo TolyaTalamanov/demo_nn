@@ -4,6 +4,9 @@ project(demo_nn)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+set(GUI_INCLUDE gui/mainwindow.h)
+set(GUI_SOURCE gui/mainwindow.cpp)
+
 find_package(Qt5Widgets REQUIRED)
 
 add_executable(${PROJECT_NAME} main.cpp)
