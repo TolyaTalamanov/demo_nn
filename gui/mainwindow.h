@@ -12,5 +12,11 @@ public:
     ~MainWindow();
 protected:
     void createActions();
+private:
+    void open();
+private:
+    QImage  image;
+    QLabel* imageLabel;
+
 };
 #endif //DEMO_NN_GUI_MAINWINDOW_H

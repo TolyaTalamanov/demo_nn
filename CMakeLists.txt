@@ -9,7 +9,7 @@ set(GUI_SOURCE gui/mainwindow.cpp)
 
 find_package(Qt5Widgets REQUIRED)
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} demo_nn.cpp ${GUI_INCLUDE} ${GUI_SOURCE})
 
 qt5_use_modules(${PROJECT_NAME} Widgets)
 
