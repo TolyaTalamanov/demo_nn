@@ -5,18 +5,23 @@
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    MainWindow();
-    ~MainWindow();
+  MainWindow();
+  ~MainWindow();
+
 protected:
-    void createActions();
+  void createActions();
+
 private:
-    void open();
+  void open();
+  void save();
+  void saveAs();
+
 private:
-    QImage  image;
-    QLabel* imageLabel;
+  QImage  _image;
+  QLabel* _imageLabel;
 
 };
 #endif //DEMO_NN_GUI_MAINWINDOW_H
