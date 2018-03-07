@@ -5,6 +5,7 @@ MainWindow::MainWindow() : _imageLabel(new QLabel) {
   setWindowTitle(tr("Demo_nn"));
   setCentralWidget(_imageLabel);
   createActions();
+  readSettings();
 
   _imageLabel->setPixmap(QPixmap::fromImage(_image));
   _imageLabel->show();
@@ -117,4 +118,22 @@ void MainWindow::cut() {
   copy();
   _image = QImage();
   _imageLabel->setPixmap(QPixmap::fromImage(_image));
+}
+
+void MainWindow::readSettings() {
+  QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+  const QByteArray geometry = settings.value("geometry", QByteArray()).toByteArray();
+  if (geometry.isEmpty()) {
+    const QRect availableGeometry = QApplication::desktop()->availableGeometry(this);
+    resize(availableGeometry.width() / 3, availableGeometry.height() / 2);
+    move((availableGeometry.width() - width()) / 2,
+        (availableGeometry.height() - height()) / 2);
+  } else {
+    restoreGeometry(geometry);
+  }
+}
+
+void MainWindow::writeSettings() {
+  QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+  settings.setValue("geometry", saveGeometry());
 }

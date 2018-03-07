@@ -21,6 +21,8 @@ private:
   void paste();
   void copy();
   void cut();
+  void readSettings();
+  void writeSettings();
 
 private:
   QImage  _image;
