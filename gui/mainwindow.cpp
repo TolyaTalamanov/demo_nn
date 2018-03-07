@@ -50,13 +50,13 @@ void MainWindow::createActions() {
   QAction* actCut = new QAction(cutIcon, "image cut action", 0);
   actCut->setText("Cut");
   actCut->setShortcut(QKeySequence("CTRL+X"));
-  actCut->setEnabled(false);
+  //actCut->setEnabled(false);
 
   const QIcon copyIcon = QIcon::fromTheme("copy-image", QIcon("../icons/copy.png"));
   QAction* actCopy = new QAction(copyIcon, "image copy action", 0);
   actCopy->setText("Copy");
   actCopy->setShortcut(QKeySequence("CTRL+C"));
-  actCopy->setEnabled(false);
+  //actCopy->setEnabled(false);
 
   const QIcon pasteIcon = QIcon::fromTheme("paste-image", QIcon("../icons/paste.png"));
   QAction* actPaste = new QAction(pasteIcon, "image paste action", 0);
@@ -68,6 +68,7 @@ void MainWindow::createActions() {
   editMenu->addAction(actPaste);
 
   connect(actPaste, &QAction::triggered, this, &MainWindow::paste);
+  connect(actCopy,  &QAction::triggered, this, &MainWindow::copy);
 
   toolBar->addAction(actCut);
   toolBar->addAction(actCopy);
@@ -105,4 +106,9 @@ void MainWindow::paste() {
     _imageLabel->setPixmap(pixmap);
   }
 }
+
+void MainWindow::copy() {
+  QApplication::clipboard()->setImage(_image, QClipboard::Clipboard);
+}
+
 
