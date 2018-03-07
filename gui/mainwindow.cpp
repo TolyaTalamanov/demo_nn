@@ -12,17 +12,22 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::createActions() {
-  QMenu* filemenu = menuBar()->addMenu(tr("&File"));
+  QMenu* filemenu   = menuBar()->addMenu(tr("&File"));
+  QToolBar* toolBar = new QToolBar("ToolBar");
+  addToolBar(toolBar);
 
-  QAction* actOpen = new QAction("image open action", 0);
+  const QIcon openIcon = QIcon::fromTheme("open-image", QIcon("../icons/open.png"));
+  QAction* actOpen = new QAction(openIcon, "image open action", 0);
   actOpen->setText("&Open...");
   actOpen->setShortcut(QKeySequence("CTRL+O"));
 
-  QAction* actSave = new QAction("image save action", 0);
+
+  const QIcon saveIcon = QIcon::fromTheme("save-image", QIcon("../icons/save.png"));
+  QAction* actSave = new QAction(saveIcon, "image save action", 0);
   actSave->setText("&Save");
   actSave->setShortcut(QKeySequence("CTRL+S"));
 
-  QAction* actSaveAs = new QAction("image save as action", 0);
+  QAction* actSaveAs = new QAction(saveIcon, "image save as action", 0);
   actSaveAs->setText("&Save As...");
   actSaveAs->setShortcut(QKeySequence("CTRL+SHIFT+S"));
 
@@ -34,11 +39,10 @@ void MainWindow::createActions() {
   filemenu->addAction(actSave);
   filemenu->addAction(actSaveAs);
 
-  QToolBar* ptb = new QToolBar("ToolBar");
+  toolBar->addAction(actOpen);
+  toolBar->addAction(actSaveAs);
 
-  ptb->addAction(actOpen);
-  ptb->addAction(actSave);
-  ptb->addAction(actSaveAs);
+  statusBar()->showMessage(tr("Ready"));
 }
 
 void MainWindow::open() { 
