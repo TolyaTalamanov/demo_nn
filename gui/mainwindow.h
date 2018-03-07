@@ -21,12 +21,15 @@ private:
   void paste();
   void copy();
   void cut();
+  void about();
 
   void readSettings();
   void writeSettings();
 
   void createFileActions();
   void createEditActions();
+  void createHelpActions();
+
   void createStatusBar();
   void createCentralWidget();
 

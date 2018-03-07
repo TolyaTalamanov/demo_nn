@@ -15,6 +15,7 @@ MainWindow::~MainWindow() {
 void MainWindow::createActions() {
   createFileActions();
   createEditActions();
+  createHelpActions();
 }
 
 void MainWindow::open() { 
@@ -55,6 +56,12 @@ void MainWindow::cut() {
   copy();
   _image = QImage();
   _imageLabel->setPixmap(QPixmap::fromImage(_image));
+}
+
+void MainWindow::about() {
+  QMessageBox::about(this, tr("About Application"),
+      tr("The <b>Application</b> example demonstrates how to "
+        "run neural networks"));
 }
 
 void MainWindow::readSettings() {
@@ -109,7 +116,7 @@ void MainWindow::createFileActions() {
 }
 
 void MainWindow::createEditActions() {
-  QMenu* editMenu = menuBar()->addMenu(tr("&Edit")); 
+  QMenu* editMenu = menuBar()->addMenu(tr("&Edit"));
   QToolBar* editToolBar = addToolBar(tr("Edit"));
 
   const QIcon cutIcon = QIcon::fromTheme("cut-image", QIcon("../icons/cut.png"));
@@ -136,6 +143,17 @@ void MainWindow::createEditActions() {
   editToolBar->addAction(actPaste);
   
   menuBar()->addSeparator();
+
+}
+
+void MainWindow::createHelpActions() {
+  QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));
+
+  QAction* actAbout = helpMenu->addAction(tr("&About"), this, &MainWindow::about);
+  actAbout->setStatusTip("Show the application's About box");
+
+  QAction* actAboutQt = helpMenu->addAction(tr("&About Qt"), qApp, &QApplication::aboutQt);
+  actAboutQt->setStatusTip("Show the Qt library's About box");
 
 }
 
