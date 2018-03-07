@@ -1,14 +1,15 @@
 #include "mainwindow.h"
 #include <iostream>
 
-MainWindow::MainWindow() : _imageLabel(new QLabel) {
-  setWindowTitle(tr("Demo_nn"));
-  setCentralWidget(_imageLabel);
-  createActions();
+MainWindow::MainWindow() {
   readSettings();
 
-  _imageLabel->setPixmap(QPixmap::fromImage(_image));
-  _imageLabel->show();
+  setWindowTitle(tr("Demonstration neural networks"));
+
+  createCentralWidget();
+  createToolBar();
+
+  createActions();
 }
 
 MainWindow::~MainWindow() {
@@ -16,68 +17,8 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::createActions() {
-  QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
-  QMenu* editMenu = menuBar()->addMenu(tr("&Edit")); 
-
-  QToolBar* toolBar = new QToolBar("ToolBar");
-  addToolBar(toolBar);
-
-  const QIcon openIcon = QIcon::fromTheme("open-image", QIcon("../icons/open.png"));
-  QAction* actOpen = new QAction(openIcon, "image open action", 0);
-  actOpen->setText("&Open...");
-  actOpen->setShortcut(QKeySequence("CTRL+O"));
-
-  const QIcon saveIcon = QIcon::fromTheme("save-image", QIcon("../icons/save.png"));
-  QAction* actSave = new QAction(saveIcon, "image save action", 0);
-  actSave->setText("&Save");
-  actSave->setShortcut(QKeySequence("CTRL+S"));
-
-  QAction* actSaveAs = new QAction(saveIcon, "image save as action", 0);
-  actSaveAs->setText("&Save As...");
-  actSaveAs->setShortcut(QKeySequence("CTRL+SHIFT+S"));
-
-  fileMenu->addAction(actOpen);
-  fileMenu->addAction(actSave);
-  fileMenu->addAction(actSaveAs);
-
-  connect(actOpen,   &QAction::triggered, this, &MainWindow::open);
-  connect(actSave,   &QAction::triggered, this, &MainWindow::save);
-  connect(actSaveAs, &QAction::triggered, this, &MainWindow::saveAs);
-
-  toolBar->addAction(actOpen);
-  toolBar->addAction(actSaveAs);
-
-
-  const QIcon cutIcon = QIcon::fromTheme("cut-image", QIcon("../icons/cut.png"));
-  QAction* actCut = new QAction(cutIcon, "image cut action", 0);
-  actCut->setText("Cut");
-  actCut->setShortcut(QKeySequence("CTRL+X"));
-  //actCut->setEnabled(false);
-
-  const QIcon copyIcon = QIcon::fromTheme("copy-image", QIcon("../icons/copy.png"));
-  QAction* actCopy = new QAction(copyIcon, "image copy action", 0);
-  actCopy->setText("Copy");
-  actCopy->setShortcut(QKeySequence("CTRL+C"));
-  //actCopy->setEnabled(false);
-
-  const QIcon pasteIcon = QIcon::fromTheme("paste-image", QIcon("../icons/paste.png"));
-  QAction* actPaste = new QAction(pasteIcon, "image paste action", 0);
-  actPaste->setText("Paste");
-  actPaste->setShortcut(QKeySequence("CTRL+V"));
-
-  editMenu->addAction(actCut);
-  editMenu->addAction(actCopy);
-  editMenu->addAction(actPaste);
-
-  connect(actPaste, &QAction::triggered, this, &MainWindow::paste);
-  connect(actCopy,  &QAction::triggered, this, &MainWindow::copy);
-  connect(actCut,   &QAction::triggered, this, &MainWindow::cut);
-
-  toolBar->addAction(actCut);
-  toolBar->addAction(actCopy);
-  toolBar->addAction(actPaste);
-
-  statusBar()->showMessage(tr("Ready"));
+  createFileActions();
+  createEditActions();
 }
 
 void MainWindow::open() { 
@@ -136,4 +77,76 @@ void MainWindow::readSettings() {
 void MainWindow::writeSettings() {
   QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
   settings.setValue("geometry", saveGeometry());
+}
+
+void MainWindow::createFileActions() {
+  QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
+
+  const QIcon openIcon = QIcon::fromTheme("open-image", QIcon("../icons/open.png"));
+  QAction* actOpen = new QAction(openIcon, "image open action", 0);
+  actOpen->setText("&Open...");
+  actOpen->setShortcut(QKeySequence("CTRL+O"));
+
+  const QIcon saveIcon = QIcon::fromTheme("save-image", QIcon("../icons/save.png"));
+  QAction* actSave = new QAction(saveIcon, "image save action", 0);
+  actSave->setText("&Save");
+  actSave->setShortcut(QKeySequence("CTRL+S"));
+
+  QAction* actSaveAs = new QAction(saveIcon, "image save as action", 0);
+  actSaveAs->setText("&Save As...");
+  actSaveAs->setShortcut(QKeySequence("CTRL+SHIFT+S"));
+
+  fileMenu->addAction(actOpen);
+  fileMenu->addAction(actSave);
+  fileMenu->addAction(actSaveAs);
+
+  connect(actOpen,   &QAction::triggered, this, &MainWindow::open);
+  connect(actSave,   &QAction::triggered, this, &MainWindow::save);
+  connect(actSaveAs, &QAction::triggered, this, &MainWindow::saveAs);
+
+  _toolBar->addAction(actOpen);
+  _toolBar->addAction(actSaveAs);
+}
+
+void MainWindow::createEditActions() {
+  QMenu* editMenu = menuBar()->addMenu(tr("&Edit")); 
+
+  const QIcon cutIcon = QIcon::fromTheme("cut-image", QIcon("../icons/cut.png"));
+  QAction* actCut = new QAction(cutIcon, "image cut action", 0);
+  actCut->setText("Cut");
+  actCut->setShortcut(QKeySequence("CTRL+X"));
+  //actCut->setEnabled(false);
+
+  const QIcon copyIcon = QIcon::fromTheme("copy-image", QIcon("../icons/copy.png"));
+  QAction* actCopy = new QAction(copyIcon, "image copy action", 0);
+  actCopy->setText("Copy");
+  actCopy->setShortcut(QKeySequence("CTRL+C"));
+  //actCopy->setEnabled(false);
+
+  const QIcon pasteIcon = QIcon::fromTheme("paste-image", QIcon("../icons/paste.png"));
+  QAction* actPaste = new QAction(pasteIcon, "image paste action", 0);
+  actPaste->setText("Paste");
+  actPaste->setShortcut(QKeySequence("CTRL+V"));
+
+  editMenu->addAction(actCut);
+  editMenu->addAction(actCopy);
+  editMenu->addAction(actPaste);
+
+  connect(actPaste, &QAction::triggered, this, &MainWindow::paste);
+  connect(actCopy,  &QAction::triggered, this, &MainWindow::copy);
+  connect(actCut,   &QAction::triggered, this, &MainWindow::cut);
+
+  _toolBar->addAction(actCut);
+  _toolBar->addAction(actCopy);
+  _toolBar->addAction(actPaste);
+}
+
+void MainWindow::createToolBar() {
+  _toolBar = new QToolBar("ToolBar");
+  addToolBar(_toolBar);
+}
+
+void MainWindow::createCentralWidget() {
+  _imageLabel = new QLabel();
+  setCentralWidget(_imageLabel);
 }

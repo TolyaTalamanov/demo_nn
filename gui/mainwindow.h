@@ -21,12 +21,20 @@ private:
   void paste();
   void copy();
   void cut();
+
   void readSettings();
   void writeSettings();
 
+  void createFileActions();
+  void createEditActions();
+  void createStatusBar();
+  void createToolBar();
+  void createCentralWidget();
+
 private:
-  QImage  _image;
-  QLabel* _imageLabel;
+  QImage    _image;
+  QLabel*   _imageLabel;
+  QToolBar* _toolBar;
 
 };
 #endif //DEMO_NN_GUI_MAINWINDOW_H
