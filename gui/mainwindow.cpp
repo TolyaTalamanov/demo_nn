@@ -86,26 +86,32 @@ void MainWindow::createFileActions() {
   QAction* actOpen = new QAction(openIcon, "image open action", 0);
   actOpen->setText("&Open...");
   actOpen->setShortcut(QKeySequence("CTRL+O"));
+  fileMenu->addAction(actOpen);
+  _toolBar->addAction(actOpen);
+  connect(actOpen,   &QAction::triggered, this, &MainWindow::open);
 
   const QIcon saveIcon = QIcon::fromTheme("save-image", QIcon("../icons/save.png"));
   QAction* actSave = new QAction(saveIcon, "image save action", 0);
   actSave->setText("&Save");
   actSave->setShortcut(QKeySequence("CTRL+S"));
+  fileMenu->addAction(actSave);
+  connect(actSave,   &QAction::triggered, this, &MainWindow::save);
 
   QAction* actSaveAs = new QAction(saveIcon, "image save as action", 0);
   actSaveAs->setText("&Save As...");
   actSaveAs->setShortcut(QKeySequence("CTRL+SHIFT+S"));
-
-  fileMenu->addAction(actOpen);
-  fileMenu->addAction(actSave);
   fileMenu->addAction(actSaveAs);
-
-  connect(actOpen,   &QAction::triggered, this, &MainWindow::open);
-  connect(actSave,   &QAction::triggered, this, &MainWindow::save);
   connect(actSaveAs, &QAction::triggered, this, &MainWindow::saveAs);
-
-  _toolBar->addAction(actOpen);
   _toolBar->addAction(actSaveAs);
+
+  fileMenu->addSeparator();
+
+  const QIcon exitIcon = QIcon::fromTheme("exit-image", QIcon("../icons/exit.png"));
+  QAction* actExit = fileMenu->addAction(exitIcon, tr("&Exit"), this, &QWidget::close);
+  actExit->setText("&Exit...");
+  actExit->setShortcut(QKeySequence::Quit);
+  fileMenu->addAction(actExit);
+
 }
 
 void MainWindow::createEditActions() {
