@@ -18,6 +18,7 @@ private:
   void open();
   void save();
   void saveAs();
+  void paste();
 
 private:
   QImage  _image;
