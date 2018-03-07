@@ -3,12 +3,8 @@
 
 MainWindow::MainWindow() {
   readSettings();
-
   setWindowTitle(tr("Demonstration neural networks"));
-
   createCentralWidget();
-  createToolBar();
-
   createActions();
 }
 
@@ -81,13 +77,14 @@ void MainWindow::writeSettings() {
 
 void MainWindow::createFileActions() {
   QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
+  QToolBar* fileToolBar = addToolBar(tr("File"));
 
   const QIcon openIcon = QIcon::fromTheme("open-image", QIcon("../icons/open.png"));
   QAction* actOpen = fileMenu->addAction(openIcon, tr("&Open"), this, &MainWindow::open);
   actOpen->setShortcut(QKeySequence::Open);
   actOpen->setStatusTip(tr("Open image"));
   fileMenu->addAction(actOpen);
-  _toolBar->addAction(actOpen);
+  fileToolBar->addAction(actOpen);
 
   const QIcon saveIcon = QIcon::fromTheme("save-image", QIcon("../icons/save.png"));
   QAction* actSave = fileMenu->addAction(saveIcon, tr("&Save"), this, &MainWindow::save);
@@ -99,7 +96,7 @@ void MainWindow::createFileActions() {
   actSaveAs->setShortcut(QKeySequence::SaveAs);
   actSaveAs->setStatusTip(tr("Save image"));
   fileMenu->addAction(actSaveAs);
-  _toolBar->addAction(actSaveAs);
+  fileToolBar->addAction(actSaveAs);
 
   fileMenu->addSeparator();
 
@@ -113,13 +110,14 @@ void MainWindow::createFileActions() {
 
 void MainWindow::createEditActions() {
   QMenu* editMenu = menuBar()->addMenu(tr("&Edit")); 
+  QToolBar* editToolBar = addToolBar(tr("Edit"));
 
   const QIcon cutIcon = QIcon::fromTheme("cut-image", QIcon("../icons/cut.png"));
   QAction* actCut = editMenu->addAction(cutIcon, tr("&Cut"), this, &MainWindow::cut);
   actCut->setShortcut(QKeySequence::Cut);
   actCut->setStatusTip(tr("Cut image"));
   editMenu->addAction(actCut);
-  _toolBar->addAction(actCut);
+  editToolBar->addAction(actCut);
   //actCut->setEnabled(false);
 
   const QIcon copyIcon = QIcon::fromTheme("copy-image", QIcon("../icons/copy.png"));
@@ -127,7 +125,7 @@ void MainWindow::createEditActions() {
   actCopy->setShortcut(QKeySequence::Copy);
   actCopy->setStatusTip("Copy image");
   editMenu->addAction(actCopy);
-  _toolBar->addAction(actCopy);
+  editToolBar->addAction(actCopy);
   //actCopy->setEnabled(false);
 
   const QIcon pasteIcon = QIcon::fromTheme("paste-image", QIcon("../icons/paste.png"));
@@ -135,13 +133,10 @@ void MainWindow::createEditActions() {
   actPaste->setShortcut(QKeySequence::Paste);
   editMenu->addAction(actPaste);
   editMenu->setStatusTip("Paste image");
-  _toolBar->addAction(actPaste);
+  editToolBar->addAction(actPaste);
+  
+  menuBar()->addSeparator();
 
-}
-
-void MainWindow::createToolBar() {
-  _toolBar = new QToolBar("ToolBar");
-  addToolBar(_toolBar);
 }
 
 void MainWindow::createCentralWidget() {
