@@ -20,6 +20,7 @@ private:
   void saveAs();
   void paste();
   void copy();
+  void cut();
 
 private:
   QImage  _image;

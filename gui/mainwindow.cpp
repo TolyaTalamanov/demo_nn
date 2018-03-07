@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include <iostream>
 
 MainWindow::MainWindow() : _imageLabel(new QLabel) {
   setWindowTitle(tr("Demo_nn"));
@@ -69,6 +70,7 @@ void MainWindow::createActions() {
 
   connect(actPaste, &QAction::triggered, this, &MainWindow::paste);
   connect(actCopy,  &QAction::triggered, this, &MainWindow::copy);
+  connect(actCut,   &QAction::triggered, this, &MainWindow::cut);
 
   toolBar->addAction(actCut);
   toolBar->addAction(actCopy);
@@ -111,4 +113,8 @@ void MainWindow::copy() {
   QApplication::clipboard()->setImage(_image, QClipboard::Clipboard);
 }
 
-
+void MainWindow::cut() {
+  copy();
+  _image = QImage();
+  _imageLabel->setPixmap(QPixmap::fromImage(_image));
+}
