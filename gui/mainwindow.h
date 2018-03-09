@@ -9,12 +9,18 @@ class MainWindow : public QMainWindow
 
 public:
   MainWindow();
+  MainWindow(const MainWindow& other) {
+
+  }
   ~MainWindow();
+
+signals:
+  void setImage(bool is_set);
 
 protected:
   void createActions();
 
-private:
+private slots: 
   void open();
   void save();
   void saveAs();
@@ -23,6 +29,7 @@ private:
   void cut();
   void about();
 
+private:
   void readSettings();
   void writeSettings();
 
@@ -38,4 +45,5 @@ private:
   QLabel*   _imageLabel;
 
 };
+Q_DECLARE_METATYPE(MainWindow)
 #endif //DEMO_NN_GUI_MAINWINDOW_H

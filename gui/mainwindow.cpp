@@ -25,6 +25,7 @@ void MainWindow::open() {
   }
   _imageLabel->setPixmap(QPixmap::fromImage(_image));
   _imageLabel->show();
+  emit setImage(true);
 }
 
 void MainWindow::save() {
@@ -45,6 +46,7 @@ void MainWindow::paste() {
     QPixmap pixmap = qvariant_cast<QPixmap>(mimeData->imageData());
     _image = pixmap.toImage();
     _imageLabel->setPixmap(pixmap);
+    emit setImage(true);
   }
 }
 
@@ -56,6 +58,7 @@ void MainWindow::cut() {
   copy();
   _image = QImage();
   _imageLabel->setPixmap(QPixmap::fromImage(_image));
+  emit setImage(false);
 }
 
 void MainWindow::about() {
@@ -125,7 +128,8 @@ void MainWindow::createEditActions() {
   actCut->setStatusTip(tr("Cut image"));
   editMenu->addAction(actCut);
   editToolBar->addAction(actCut);
-  //actCut->setEnabled(false);
+  actCut->setEnabled(false);
+  connect(this, &MainWindow::setImage, actCut, &QAction::setEnabled);
 
   const QIcon copyIcon = QIcon::fromTheme("copy-image", QIcon("../icons/copy.png"));
   QAction* actCopy = editMenu->addAction(copyIcon, tr("&Copy"), this, &MainWindow::copy);
@@ -133,7 +137,8 @@ void MainWindow::createEditActions() {
   actCopy->setStatusTip("Copy image");
   editMenu->addAction(actCopy);
   editToolBar->addAction(actCopy);
-  //actCopy->setEnabled(false);
+  actCopy->setEnabled(false);
+  connect(this, &MainWindow::setImage, actCopy, &QAction::setEnabled);
 
   const QIcon pasteIcon = QIcon::fromTheme("paste-image", QIcon("../icons/paste.png"));
   QAction* actPaste = editMenu->addAction(pasteIcon, tr("&Paste"), this, &MainWindow::paste);
