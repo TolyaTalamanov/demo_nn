@@ -6,6 +6,7 @@ MainWindow::MainWindow() {
   setFixedSize(QDesktopWidget().availableGeometry(this).size() * 0.8);
   setWindowTitle(tr("Demonstration neural networks"));
   createCentralWidget();
+  createStatusBar();
   createActions();
 }
 
@@ -166,4 +167,8 @@ void MainWindow::createHelpActions() {
 void MainWindow::createCentralWidget() {
   _imageLabel = new QLabel();
   setCentralWidget(_imageLabel);
+}
+
+void MainWindow::createStatusBar() {
+  statusBar()->showMessage(tr("Ready"));
 }
