@@ -3,6 +3,7 @@
 
 MainWindow::MainWindow() {
   readSettings();
+  setFixedSize(QDesktopWidget().availableGeometry(this).size() * 0.8);
   setWindowTitle(tr("Demonstration neural networks"));
   createCentralWidget();
   createActions();
