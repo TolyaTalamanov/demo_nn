@@ -166,7 +166,10 @@ void MainWindow::createHelpActions() {
 
 void MainWindow::createCentralWidget() {
   _imageLabel = new QLabel();
-  setCentralWidget(_imageLabel);
+  QScrollArea* scrollArea = new QScrollArea();
+  scrollArea->setWidget(_imageLabel);
+  scrollArea->setWidgetResizable(true);
+  setCentralWidget(scrollArea);
 }
 
 void MainWindow::createStatusBar() {
