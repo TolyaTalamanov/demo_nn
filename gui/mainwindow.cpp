@@ -24,10 +24,10 @@ void MainWindow::open() {
   QString imagePath = QFileDialog::getOpenFileName(this, tr("Open"), QDir::currentPath());
   if (!imagePath.isEmpty()) {
     _image.load(imagePath);
+    _imageLabel->setPixmap(QPixmap::fromImage(_image));
+    _imageLabel->show();
+    emit setImage(true);
   }
-  _imageLabel->setPixmap(QPixmap::fromImage(_image));
-  _imageLabel->show();
-  emit setImage(true);
 }
 
 void MainWindow::save() {
