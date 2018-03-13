@@ -36,6 +36,7 @@ private:
   void createFileActions();
   void createEditActions();
   void createHelpActions();
+  void createRunActions();
 
   void createStatusBar();
   void createCentralWidget();

@@ -18,6 +18,7 @@ void MainWindow::createActions() {
   createFileActions();
   createEditActions();
   createHelpActions();
+  createRunActions();
 }
 
 void MainWindow::open() { 
@@ -161,6 +162,26 @@ void MainWindow::createHelpActions() {
 
   QAction* actAboutQt = helpMenu->addAction(tr("&About Qt"), qApp, &QApplication::aboutQt);
   actAboutQt->setStatusTip("Show the Qt library's About box");
+
+}
+
+void MainWindow::createRunActions() {
+  QToolBar* runToolBar = addToolBar(tr("Run"));
+
+  QWidget* spacer = new QWidget();
+  spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  runToolBar->addWidget(spacer);
+
+  QComboBox* netSelectionBox = new QComboBox();
+  QStringList netNamed; 
+  netNamed << "ssd" << "yolo";
+  netSelectionBox->addItems(netNamed);
+  runToolBar->addWidget(netSelectionBox);
+
+  const QIcon runIcon = QIcon::fromTheme("run", QIcon("../icons/run.png"));
+  QPushButton* runButton = new QPushButton();
+  runButton->setIcon(runIcon);
+  runToolBar->addWidget(runButton);
 
 }
 
