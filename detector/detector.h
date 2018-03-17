@@ -18,7 +18,7 @@ public:
            const string& mean_file,
            const string& mean_value);
 
-	std::vector<vector<float> > Detect(const cv::Mat& img);
+  std::vector<vector<float> > Detect(const cv::Mat& img);
 
 private:
   void SetMean(const string& mean_file, const string& mean_value);
