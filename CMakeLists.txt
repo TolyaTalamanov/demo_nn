@@ -9,7 +9,7 @@ project(demo_nn)
 set(LIBRARY DetectorLib)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(GUI_INCLUDE gui/mainwindow.h)
+set(GUI_INCLUDE gui/mainwindow.hpp)
 set(GUI_SOURCE gui/mainwindow.cpp)
 
 find_package(Qt5Widgets REQUIRED)
