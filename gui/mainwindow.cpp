@@ -1,5 +1,4 @@
-#include "mainwindow.h"
-#include <iostream>
+#include "mainwindow.hpp"
 
 MainWindow::MainWindow() {
   readSettings();
@@ -11,7 +10,6 @@ MainWindow::MainWindow() {
 }
 
 MainWindow::~MainWindow() {
-
 }
 
 void MainWindow::createActions() {
@@ -21,8 +19,10 @@ void MainWindow::createActions() {
   createRunActions();
 }
 
-void MainWindow::open() { 
-  QString imagePath = QFileDialog::getOpenFileName(this, tr("Open"), QDir::currentPath());
+void MainWindow::open() {
+  QString imagePath = QFileDialog::getOpenFileName(this, tr("Open"),
+                                                    QDir::currentPath());
+
   if (!imagePath.isEmpty()) {
     _image.load(imagePath);
     _imageLabel->setPixmap(QPixmap::fromImage(_image));
@@ -32,12 +32,12 @@ void MainWindow::open() {
 }
 
 void MainWindow::save() {
-  //TODO 
+  // TODO(TolyaTalamanov): save action
 }
 
 void MainWindow::saveAs() {
   QString saveImagePath = QFileDialog::getSaveFileName(this, tr("Save"), "",
-                                                       tr("JPEG (*.jpg *.jpeg);;PNG (*.png)"));
+                                       tr("JPEG (*.jpg *.jpeg);;PNG (*.png)"));
   _image.save(saveImagePath);
 }
 
@@ -71,8 +71,12 @@ void MainWindow::about() {
 }
 
 void MainWindow::readSettings() {
-  QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
-  const QByteArray geometry = settings.value("geometry", QByteArray()).toByteArray();
+  QSettings settings(QCoreApplication::organizationName(),
+                     QCoreApplication::applicationName());
+
+  const QByteArray geometry = settings.value("geometry",
+                                              QByteArray()).toByteArray();
+
   if (geometry.isEmpty()) {
     const QRect availableGeometry = QApplication::desktop()->availableGeometry(this);
     resize(availableGeometry.width() / 3, availableGeometry.height() / 2);
@@ -84,7 +88,9 @@ void MainWindow::readSettings() {
 }
 
 void MainWindow::writeSettings() {
-  QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+  QSettings settings(QCoreApplication::organizationName(),
+                     QCoreApplication::applicationName());
+
   settings.setValue("geometry", saveGeometry());
 }
 
@@ -92,20 +98,26 @@ void MainWindow::createFileActions() {
   QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
   QToolBar* fileToolBar = addToolBar(tr("File"));
 
-  const QIcon openIcon = QIcon::fromTheme("open-image", QIcon("../icons/open.png"));
-  QAction* actOpen = fileMenu->addAction(openIcon, tr("&Open"), this, &MainWindow::open);
+  const QIcon openIcon = QIcon::fromTheme("open-image",
+                                           QIcon("../icons/open.png"));
+  QAction* actOpen = fileMenu->addAction(openIcon, tr("&Open"),
+                                                   this, &MainWindow::open);
   actOpen->setShortcut(QKeySequence::Open);
   actOpen->setStatusTip(tr("Open image"));
   fileMenu->addAction(actOpen);
   fileToolBar->addAction(actOpen);
 
-  const QIcon saveIcon = QIcon::fromTheme("save-image", QIcon("../icons/save.png"));
-  QAction* actSave = fileMenu->addAction(saveIcon, tr("&Save"), this, &MainWindow::save);
+  const QIcon saveIcon = QIcon::fromTheme("save-image",
+                                           QIcon("../icons/save.png"));
+  QAction* actSave = fileMenu->addAction(saveIcon, tr("&Save"),
+                                         this, &MainWindow::save);
+
   actSave->setShortcut(QKeySequence::Save);
   actSave->setStatusTip(tr("Save image"));
   fileMenu->addAction(actSave);
 
-  QAction* actSaveAs = fileMenu->addAction(saveIcon, tr("&Save As..."), this, &MainWindow::saveAs);
+  QAction* actSaveAs = fileMenu->addAction(saveIcon, tr("&Save As..."),
+                                           this, &MainWindow::saveAs);
   actSaveAs->setShortcut(QKeySequence::SaveAs);
   actSaveAs->setStatusTip(tr("Save image"));
   fileMenu->addAction(actSaveAs);
@@ -113,20 +125,24 @@ void MainWindow::createFileActions() {
 
   fileMenu->addSeparator();
 
-  const QIcon exitIcon = QIcon::fromTheme("exit-image", QIcon("../icons/exit.png"));
-  QAction* actExit = fileMenu->addAction(exitIcon, tr("&Exit"), this, &QWidget::close);
+  const QIcon exitIcon = QIcon::fromTheme("exit-image",
+                                          QIcon("../icons/exit.png"));
+  QAction* actExit = fileMenu->addAction(exitIcon, tr("&Exit"),
+                                         this, &QWidget::close);
+
   actExit->setShortcut(QKeySequence::Quit);
   actExit->setStatusTip(tr("Exit the application"));
   fileMenu->addAction(actExit);
-
 }
 
 void MainWindow::createEditActions() {
   QMenu* editMenu = menuBar()->addMenu(tr("&Edit"));
   QToolBar* editToolBar = addToolBar(tr("Edit"));
 
-  const QIcon cutIcon = QIcon::fromTheme("cut-image", QIcon("../icons/cut.png"));
-  QAction* actCut = editMenu->addAction(cutIcon, tr("&Cut"), this, &MainWindow::cut);
+  const QIcon cutIcon = QIcon::fromTheme("cut-image",
+                                         QIcon("../icons/cut.png"));
+  QAction* actCut = editMenu->addAction(cutIcon, tr("&Cut"),
+                                        this, &MainWindow::cut);
   actCut->setShortcut(QKeySequence::Cut);
   actCut->setStatusTip(tr("Cut image"));
   editMenu->addAction(actCut);
@@ -134,8 +150,11 @@ void MainWindow::createEditActions() {
   actCut->setEnabled(false);
   connect(this, &MainWindow::setImage, actCut, &QAction::setEnabled);
 
-  const QIcon copyIcon = QIcon::fromTheme("copy-image", QIcon("../icons/copy.png"));
-  QAction* actCopy = editMenu->addAction(copyIcon, tr("&Copy"), this, &MainWindow::copy);
+  const QIcon copyIcon = QIcon::fromTheme("copy-image",
+                                          QIcon("../icons/copy.png"));
+  QAction* actCopy = editMenu->addAction(copyIcon, tr("&Copy"),
+                                           this, &MainWindow::copy);
+
   actCopy->setShortcut(QKeySequence::Copy);
   actCopy->setStatusTip("Copy image");
   editMenu->addAction(actCopy);
@@ -143,26 +162,27 @@ void MainWindow::createEditActions() {
   actCopy->setEnabled(false);
   connect(this, &MainWindow::setImage, actCopy, &QAction::setEnabled);
 
-  const QIcon pasteIcon = QIcon::fromTheme("paste-image", QIcon("../icons/paste.png"));
-  QAction* actPaste = editMenu->addAction(pasteIcon, tr("&Paste"), this, &MainWindow::paste);
+  const QIcon pasteIcon = QIcon::fromTheme("paste-image",
+                                            QIcon("../icons/paste.png"));
+  QAction* actPaste = editMenu->addAction(pasteIcon, tr("&Paste"),
+                                            this, &MainWindow::paste);
+
   actPaste->setShortcut(QKeySequence::Paste);
   editMenu->addAction(actPaste);
   editMenu->setStatusTip("Paste image");
   editToolBar->addAction(actPaste);
-  
-  menuBar()->addSeparator();
 
+  menuBar()->addSeparator();
 }
 
 void MainWindow::createHelpActions() {
   QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));
-
-  QAction* actAbout = helpMenu->addAction(tr("&About"), this, &MainWindow::about);
+  QAction* actAbout = helpMenu->addAction(tr("&About"), this,
+                                           &MainWindow::about);
   actAbout->setStatusTip("Show the application's About box");
-
-  QAction* actAboutQt = helpMenu->addAction(tr("&About Qt"), qApp, &QApplication::aboutQt);
+  QAction* actAboutQt = helpMenu->addAction(tr("&About Qt"),
+                                             qApp, &QApplication::aboutQt);
   actAboutQt->setStatusTip("Show the Qt library's About box");
-
 }
 
 void MainWindow::createRunActions() {
@@ -173,7 +193,7 @@ void MainWindow::createRunActions() {
   runToolBar->addWidget(spacer);
 
   QComboBox* netSelectionBox = new QComboBox();
-  QStringList netNamed; 
+  QStringList netNamed;
   netNamed << "ssd" << "yolo";
   netSelectionBox->addItems(netNamed);
   runToolBar->addWidget(netSelectionBox);
@@ -182,7 +202,6 @@ void MainWindow::createRunActions() {
   QPushButton* runButton = new QPushButton();
   runButton->setIcon(runIcon);
   runToolBar->addWidget(runButton);
-
 }
 
 void MainWindow::createCentralWidget() {

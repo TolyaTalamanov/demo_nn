@@ -1,26 +1,22 @@
-#ifndef DEMO_NN_GUI_MAINWINDOW_H
-#define DEMO_NN_GUI_MAINWINDOW_H
+#ifndef GUI_MAINWINDOW_H_
+#define GUI_MAINWINDOW_H_
 
 #include <QtWidgets>
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
   Q_OBJECT
 
-public:
+ public:
   MainWindow();
-  MainWindow(const MainWindow& other) {
-
-  }
   ~MainWindow();
 
-signals:
+ signals:
   void setImage(bool is_set);
 
-protected:
+ protected:
   void createActions();
 
-private slots: 
+ private slots:
   void open();
   void save();
   void saveAs();
@@ -29,7 +25,7 @@ private slots:
   void cut();
   void about();
 
-private:
+ private:
   void readSettings();
   void writeSettings();
 
@@ -41,10 +37,9 @@ private:
   void createStatusBar();
   void createCentralWidget();
 
-private:
+ private:
   QImage    _image;
   QLabel*   _imageLabel;
-
 };
-Q_DECLARE_METATYPE(MainWindow)
-#endif //DEMO_NN_GUI_MAINWINDOW_H
+
+#endif  // GUI_MAINWINDOW_H_
