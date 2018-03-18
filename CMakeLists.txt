@@ -16,7 +16,7 @@ find_package(Qt5Widgets REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(Caffe REQUIRED)
 
-add_library(${LIBRARY} SHARED detector/detector.h detector/detector.cpp)
+add_library(${LIBRARY} SHARED detector/detector.hpp detector/detector.cpp)
 include_directories(detector ${Caffe_INCLUDE_DIRS})
 target_link_libraries(${LIBRARY} ${Caffe_LIBRARIES} ${OpenCV_LIBS})
 

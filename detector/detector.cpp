@@ -1,4 +1,6 @@
-#include "detector.h"
+#include "detector.hpp"
+
+using namespace caffe;
 
 Detector::Detector(const string& model_file,
                    const string& weights_file,
