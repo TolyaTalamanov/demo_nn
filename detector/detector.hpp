@@ -19,7 +19,9 @@ class Detector {
            const string& mean_file,
            const string& mean_value);
 
-	vector<vector<float> > Detect(const cv::Mat& img);
+	vector<vector<float> > Detect(int img_h, int img_w,
+			                          unsigned char* data,
+																size_t step);
 
  private:
   void SetMean(const string& mean_file, const string& mean_value);

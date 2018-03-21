@@ -28,7 +28,11 @@ Detector::Detector(const string& model_file,
   SetMean(mean_file, mean_value);
 }
 
-std::vector<vector<float> > Detector::Detect(const cv::Mat& img) {
+std::vector<vector<float> > Detector::Detect(int img_h, int img_w, 
+		                                         unsigned char* data,
+																						 size_t step) {
+
+	cv::Mat img(img_w, img_h, CV_8UC3, data, step);
   Blob<float>* input_layer = net_->input_blobs()[0];
   input_layer->Reshape(1, num_channels_,
                        input_geometry_.height, input_geometry_.width);
