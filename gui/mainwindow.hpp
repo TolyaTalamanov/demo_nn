@@ -25,6 +25,8 @@ class MainWindow : public QMainWindow {
   void cut();
   void about();
 
+	void detect();
+
  private:
   void readSettings();
   void writeSettings();

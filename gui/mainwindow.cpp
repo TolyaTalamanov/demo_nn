@@ -1,4 +1,6 @@
 #include "mainwindow.hpp"
+#include "detector.hpp"
+#include "label_parser.hpp"
 
 MainWindow::MainWindow() {
   readSettings();
@@ -200,6 +202,7 @@ void MainWindow::createRunActions() {
 
   const QIcon runIcon = QIcon::fromTheme("run", QIcon("../icons/run.png"));
   QPushButton* runButton = new QPushButton();
+	connect(runButton, &QPushButton::clicked, this, &MainWindow::detect);
   runButton->setIcon(runIcon);
   runToolBar->addWidget(runButton);
 }
@@ -214,4 +217,45 @@ void MainWindow::createCentralWidget() {
 
 void MainWindow::createStatusBar() {
   statusBar()->showMessage(tr("Ready"));
+}
+
+void MainWindow::detect() {
+  const string& model_file  = "../models/SSD_300x300/deploy.prototxt";
+  const string& weight_file =
+  "../models/SSD_300x300/VGG_VOC0712_SSD_300x300_iter_120000.caffemodel";
+
+  const string& mean_file    = "";
+  const string& mean_value   = "104,117,123";
+  const double conf_treshold = 0.5;
+
+	int x1, y1, x2, y2;
+
+	QPen pen(Qt::green, 5);
+	QPainter qPainter(&_image);
+	qPainter.setPen(pen);
+
+	QFont* fontText = new QFont("Serif", 30, QFont::Normal);
+	qPainter.setRenderHint(QPainter::TextAntialiasing, true);
+	qPainter.setFont(*fontText);
+
+	LabelParser labels("../models/SSD_300x300/labelmap_voc.prototxt");
+
+  Detector detector(model_file, weight_file, mean_file, mean_value);
+  auto detections = detector.Detect(_image.width(), _image.height(),
+			                              _image.bits(),  _image.bytesPerLine());
+
+  for (const auto& d : detections) {
+    if (d[2] > conf_treshold) {
+			x1 = static_cast<int>(d[3] * _image.width());
+			y1 = static_cast<int>(d[4] * _image.height());
+			x2 = static_cast<int>(d[5] * _image.width());
+			y2 = static_cast<int>(d[6] * _image.height());
+
+			QRect bounding_box(QPoint(x1, y1), QPoint(x2, y2));
+			qPainter.drawRect(bounding_box);
+			QString label = QString::fromStdString(labels.getLabelById(d[1]));
+			qPainter.drawText(QPoint(x1, y1 - 5), label);
+		}
+	}
+	_imageLabel->setPixmap(QPixmap::fromImage(_image));
 }

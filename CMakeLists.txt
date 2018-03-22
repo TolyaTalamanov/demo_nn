@@ -25,5 +25,7 @@ include_directories(detector ${Caffe_INCLUDE_DIRS})
 target_link_libraries(${LIBRARY} ${Caffe_LIBRARIES} ${OpenCV_LIBS})
 
 add_executable(${PROJECT_NAME} demo_nn.cpp ${GUI_INCLUDE} ${GUI_SOURCE})
+target_link_libraries(${PROJECT_NAME} ${LIBRARY}) 
+																					 
 
 qt5_use_modules(${PROJECT_NAME} Widgets)
