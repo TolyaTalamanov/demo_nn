@@ -1,6 +1,8 @@
+#include <string>
 #include "mainwindow.hpp"
 #include "detector.hpp"
 #include "label_parser.hpp"
+#include "bounding_box.hpp"
 
 MainWindow::MainWindow() {
   readSettings();
@@ -202,15 +204,15 @@ void MainWindow::createRunActions() {
 
   const QIcon runIcon = QIcon::fromTheme("run", QIcon("../icons/run.png"));
   QPushButton* runButton = new QPushButton();
-	connect(runButton, &QPushButton::clicked, this, &MainWindow::detect);
+  connect(runButton, &QPushButton::clicked, this, &MainWindow::detect);
   runButton->setIcon(runIcon);
   runToolBar->addWidget(runButton);
 }
 
 void MainWindow::createCentralWidget() {
   _imageLabel = new QLabel();
-	_imageLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-	_imageLabel->setStyleSheet("QLabel {background-color : gray; color : blue; }");
+  _imageLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+  _imageLabel->setStyleSheet("QLabel {background-color : gray;}");
   QScrollArea* scrollArea = new QScrollArea();
   scrollArea->setWidget(_imageLabel);
   scrollArea->setWidgetResizable(true);
@@ -230,54 +232,38 @@ void MainWindow::detect() {
   const string& mean_value   = "104,117,123";
   const double conf_treshold = 0.5;
 
-	int x1, y1, x2, y2;
+  int x1, y1, x2, y2;
 
-	QPen text_pen(Qt::black);
-	QPainter qPainter(&_image);
-
-	QFont* fontText = new QFont("Serif", 20, QFont::Normal);
-	qPainter.setRenderHint(QPainter::TextAntialiasing, true);
-	qPainter.setFont(*fontText);
-
-	LabelParser labels("../models/SSD_300x300/labelmap_voc.prototxt");
+  LabelParser labels("../models/SSD_300x300/labelmap_voc.prototxt");
 
   Detector detector(model_file, weight_file, mean_file, mean_value);
   auto detections = detector.Detect(_image.width(), _image.height(),
-			                              _image.bits(),  _image.bytesPerLine());
+                                    _image.bits(),  _image.bytesPerLine());
 
-	QVector<QColor> colors;
-	colors.push_back(QColor(255, 0, 0));
-	colors.push_back(QColor(0, 255, 0));
-	colors.push_back(QColor(0, 0, 255));
-	colors.push_back(QColor(255, 0, 255));
-	colors.push_back(QColor(0, 255, 255));
-	colors.push_back(QColor(255, 255, 0));
+  QVector<QColor> colors;
+  colors.push_back(Qt::green);
+  colors.push_back(Qt::blue);
+  colors.push_back(Qt::cyan);
+  colors.push_back(Qt::magenta);
+  colors.push_back(Qt::yellow);
+  colors.push_back(Qt::red);
 
   for (const auto& d : detections) {
     if (d[2] > conf_treshold) {
-			x1 = static_cast<int>(d[3] * _image.width());
-			y1 = static_cast<int>(d[4] * _image.height());
-			x2 = static_cast<int>(d[5] * _image.width());
-			y2 = static_cast<int>(d[6] * _image.height());
+      x1 = static_cast<int>(d[3] * _image.width());
+      y1 = static_cast<int>(d[4] * _image.height());
+      x2 = static_cast<int>(d[5] * _image.width());
+      y2 = static_cast<int>(d[6] * _image.height());
 
-			QRect bounding_box(QPoint(x1, y1), QPoint(x2, y2));
-			int score = d[2] * 100;
-			QString label = QString::fromStdString(labels.getLabelById(d[1])) + 
-				              QString(" ") + QString::number(score) + QString("%");
+      QRect rect(QPoint(x1, y1), QPoint(x2, y2));
+      int score = d[2] * 100;
+      QString label = QString::fromStdString(labels.getLabelById(d[1])) +
+                      QString(" ") + QString::number(score) + QString("%");
 
-			QRect label_rect(QPoint(x1, y1), QPoint(x1 + label.size() * 17, y1 - 40));
-			QColor label_color = colors[static_cast<int>(d[1]) % colors.size()];
-			QPen label_pen(label_color, 5);
-			
-		  qPainter.setPen(label_pen);
-			qPainter.drawRect(bounding_box);
-			qPainter.drawRect(label_rect);
-			qPainter.fillRect(label_rect, label_color);
-
-			qPainter.setPen(text_pen);
-			qPainter.drawText(QPoint(x1, y1 - 5), label);
-
-		}
-	}
-	_imageLabel->setPixmap(QPixmap::fromImage(_image));
+      QColor label_color = colors[static_cast<int>(d[1]) % colors.size()];
+      QBoundingBox bounding_box(rect, label_color, label);
+      bounding_box.draw(_image);
+    }
+  }
+  _imageLabel->setPixmap(QPixmap::fromImage(_image));
 }

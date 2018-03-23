@@ -1,5 +1,5 @@
-#ifndef GUI_MAINWINDOW_H_
-#define GUI_MAINWINDOW_H_
+#ifndef GUI_MAINWINDOW_HPP_
+#define GUI_MAINWINDOW_HPP_
 
 #include <QtWidgets>
 
@@ -44,4 +44,4 @@ class MainWindow : public QMainWindow {
   QLabel*   _imageLabel;
 };
 
-#endif  // GUI_MAINWINDOW_H_
+#endif  // GUI_MAINWINDOW_HPP_
