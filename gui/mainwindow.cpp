@@ -4,7 +4,7 @@
 
 MainWindow::MainWindow() {
   readSettings();
-  setFixedSize(QDesktopWidget().availableGeometry(this).size() * 0.8);
+  setFixedSize(QDesktopWidget().availableGeometry(this).size() * 0.92);
   setWindowTitle(tr("Demonstration neural networks"));
   createCentralWidget();
   createStatusBar();
@@ -209,6 +209,8 @@ void MainWindow::createRunActions() {
 
 void MainWindow::createCentralWidget() {
   _imageLabel = new QLabel();
+	_imageLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+	_imageLabel->setStyleSheet("QLabel {background-color : gray; color : blue; }");
   QScrollArea* scrollArea = new QScrollArea();
   scrollArea->setWidget(_imageLabel);
   scrollArea->setWidgetResizable(true);
@@ -230,11 +232,10 @@ void MainWindow::detect() {
 
 	int x1, y1, x2, y2;
 
-	QPen pen(Qt::green, 5);
+	QPen text_pen(Qt::black);
 	QPainter qPainter(&_image);
-	qPainter.setPen(pen);
 
-	QFont* fontText = new QFont("Serif", 30, QFont::Normal);
+	QFont* fontText = new QFont("Serif", 20, QFont::Normal);
 	qPainter.setRenderHint(QPainter::TextAntialiasing, true);
 	qPainter.setFont(*fontText);
 
@@ -244,6 +245,14 @@ void MainWindow::detect() {
   auto detections = detector.Detect(_image.width(), _image.height(),
 			                              _image.bits(),  _image.bytesPerLine());
 
+	QVector<QColor> colors;
+	colors.push_back(QColor(255, 0, 0));
+	colors.push_back(QColor(0, 255, 0));
+	colors.push_back(QColor(0, 0, 255));
+	colors.push_back(QColor(255, 0, 255));
+	colors.push_back(QColor(0, 255, 255));
+	colors.push_back(QColor(255, 255, 0));
+
   for (const auto& d : detections) {
     if (d[2] > conf_treshold) {
 			x1 = static_cast<int>(d[3] * _image.width());
@@ -252,9 +261,22 @@ void MainWindow::detect() {
 			y2 = static_cast<int>(d[6] * _image.height());
 
 			QRect bounding_box(QPoint(x1, y1), QPoint(x2, y2));
+			int score = d[2] * 100;
+			QString label = QString::fromStdString(labels.getLabelById(d[1])) + 
+				              QString(" ") + QString::number(score) + QString("%");
+
+			QRect label_rect(QPoint(x1, y1), QPoint(x1 + label.size() * 17, y1 - 40));
+			QColor label_color = colors[static_cast<int>(d[1]) % colors.size()];
+			QPen label_pen(label_color, 5);
+			
+		  qPainter.setPen(label_pen);
 			qPainter.drawRect(bounding_box);
-			QString label = QString::fromStdString(labels.getLabelById(d[1]));
+			qPainter.drawRect(label_rect);
+			qPainter.fillRect(label_rect, label_color);
+
+			qPainter.setPen(text_pen);
 			qPainter.drawText(QPoint(x1, y1 - 5), label);
+
 		}
 	}
 	_imageLabel->setPixmap(QPixmap::fromImage(_image));
